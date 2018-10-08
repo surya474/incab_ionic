@@ -1,0 +1,57 @@
+[{
+"driver_name":"Rajesh Nanda ",
+"driver_pic":"assets/imgs/profile.jpg",
+"driver_id":"",
+"driver_mob":919877221111,
+"driver_lic":"Aps22hh9982",
+"lat":18.0307,
+"lng":83.4937,
+"dist":""
+
+},
+{
+"driver_name":"Mahesh Khanna ",
+"driver_pic":"assets/imgs/profile.jpg",
+"driver_id":"",
+"driver_mob":919877221111,
+"driver_lic":"Aps22hh9982",
+"lat":17.6868,
+"lng":83.3237,
+"dist":""
+
+},
+{
+"driver_name":"Ramesh Kumar S ",
+"driver_pic":"assets/imgs/profile.jpg",
+"driver_id":"",
+"driver_mob":919877221111,
+"driver_lic":"Aps22hh9982",
+"lat":17.7771,
+"lng":83.3616,
+"dist":""
+
+},
+{
+"driver_name":"Santosh P ",
+"driver_pic":"assets/imgs/profile.jpg",
+"driver_id":"",
+"driver_mob":919877221111,
+"driver_lic":"Aps22hh9982",
+"lat":17.6868,
+"lng":83.2185,
+"dist":""
+
+},
+{
+"driver_name":"Santosh P ",
+"driver_pic":"assets/imgs/profile.jpg",
+"driver_id":"",
+"driver_mob":919877221111,
+"driver_lic":"Aps22hh9982",
+"lat":17.7425,
+"lng":83.3389,
+"dist":""
+
+}
+
+]

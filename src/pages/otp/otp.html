@@ -1,0 +1,19 @@
+<ion-content padding>
+  <div class="img_container">
+    <img src="assets/img/web_logo.png">
+  </div>
+  <div class="typography_container">
+    <img src="assets/img/web_text.png">
+  </div>
+  <h3>Type the OTP sent your mobile</h3>
+  <div class="otp_container">
+   
+    <ion-item>
+      <ion-input type="text" placeholder="Enter OTP sent to your mobile" [(ngModel)]="otp"></ion-input>
+    </ion-item>
+  </div>
+</ion-content>
+
+<ion-footer no-shadow>
+    <button ion-button color="app_color" block class="btn_login" (click)='roleSelection()'>PROCEED</button>
+</ion-footer>

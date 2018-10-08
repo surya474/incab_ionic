@@ -1,0 +1,127 @@
+
+<ion-header>
+    
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon style="color:white" name="menu"></ion-icon>
+    </button>
+    <ion-row>
+      <ion-col>
+        <ion-title>Book  Ride</ion-title>
+      </ion-col>
+      <!--  <ion-col style="text-align: right;" >
+          <ion-icon ios="ios-add-circle"  *ngIf="isHr== 'true'" md="md-add-circle"(click)=sendNotification() style="font-size:25px;color:white"></ion-icon>
+        </ion-col> -->
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+
+
+  <ion-content >
+ 
+        <ion-segment [(ngModel)]="Cabs"  >
+            <ion-segment-button value="ListView">
+                <span > Listview</span>
+            </ion-segment-button>
+            <ion-segment-button value="LocationView" (click)="getLocationView()">
+                <span > Location</span>
+            </ion-segment-button>
+
+        </ion-segment>
+
+
+
+        <div  class="tofromback">
+        <ion-item (click)=geoModalFrom() class="item item-trns">
+            <ion-label stack>
+                From
+            </ion-label>
+    
+
+          <ion-input type="text" [(ngModel)]="from" readonly></ion-input> 
+        </ion-item>
+        <ion-item  (click)=geoModalTo()>
+            <ion-label stack>
+                To
+            </ion-label>
+            <ion-input type="text" [(ngModel)]="to" readonly ></ion-input>
+            
+        </ion-item>
+       
+    </div>
+        
+      <div style="text-align: center;margin-top:10%" *ngIf="spinnerShow" >
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+        <h4>Please Wait</h4>
+      </div>
+        
+    <div #map id="map" [hidden]=" Cabs != 'LocationView'">
+
+
+    </div>
+
+    <div class="body-area" padding>
+        
+
+        <!-- <ion-scroll scrollX="true" style="white-space:nowrap">
+
+            <div class="category-card" *ngFor="let item of categories">
+                <ion-card-content style="text-align: center;" class="wrapword flex-centered">
+                    {{item.category_name}}
+                </ion-card-content>
+
+            </div>
+        </ion-scroll> -->
+
+        <div [ngSwitch]="Cabs">
+          
+           <ion-row  *ngIf="showdist">
+               <ion-col>
+            <button ion-button icon-start>
+                <ion-icon ios="ios-pin" md="md-pin"></ion-icon>
+                Distance - {{dist}} km
+              </button>
+            </ion-col>
+            <ion-col>
+              <button ion-button icon-start>
+                <ion-icon ios="logo-usd" md="logo-usd"></ion-icon>
+                Price ({{price1}}-{{price2}} $)
+              </button>
+            </ion-col>
+                     
+           </ion-row>
+           
+           
+
+            <div *ngFor="let list of cabsList">
+                <ion-card style="border-radius:15px">
+                    <ion-row>
+                        <ion-col col-8 class="flex-centered">
+                            <ion-item (click)="bookride(list)" class="no-padding">
+                                <ion-avatar item-start>
+                                    <img [src]="list.driver_pic">
+                                </ion-avatar>
+                                <div class="left-text">
+                                    <p style="color:rgb(92, 112, 125);font-size:14px"><b>{{list.driver_name}}</b></p>
+                                    <p style="color:rgb(35, 106, 174); font-size:12px"><b>{{list.dist}}</b> kms away</p>
+                                    <p style="color:rgb(92, 112, 125);font-size:12px"><b>{{list.employer_name}}</b></p>
+                                </div>
+
+                            </ion-item>
+                        </ion-col>
+
+                        <ion-col col-4 class='flex-centered flex-column left-border'>
+                            <p style="color:rgb(92, 112, 125)" class="bold"><span [innerHTML]="list.currency_code"></span><b> {{list.cost}}</b></p>
+                            <button ion-button round small style="background-color:rgb(126, 211, 33)" >Book Ride Now</button>
+                        </ion-col>
+                    </ion-row>
+                </ion-card>
+            </div>
+        </div>
+    </div>
+   
+</ion-content>
+
+<ion-footer>
+    <button ion-button  full  [hidden]=" Cabs != 'LocationView'" color="dark" (click)=bookride(cabsList[0])>Ride Now</button>
+</ion-footer>
