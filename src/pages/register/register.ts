@@ -17,6 +17,8 @@ import { LoginProvProvider } from '../../providers/login-prov/login-prov';
 })
 export class RegisterPage {
 register:FormGroup
+Mobile_Number=this.navParams.get('Mobile_Number')
+
   constructor(public loginProv:LoginProvProvider,public fb:FormBuilder,public navCtrl: NavController, public navParams: NavParams) {
  
     this.register=this.fb.group({
@@ -30,9 +32,13 @@ register:FormGroup
     console.log('ionViewDidLoad RegisterPage');
   }
 
-  registerUer(data){
-this.loginProv.registerUser(data).then(res=>{
+  registerUer(data){   
+    data['Mobile_Number']=this.Mobile_Number
+this.loginProv.registerUser(data).then((res:any)=>{
   console.log(res)
+  if(res.success){
+    this.navCtrl.setRoot("HomePage")   
+  }
 })
   }   
 }

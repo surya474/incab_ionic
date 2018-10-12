@@ -36,9 +36,12 @@ export class HomePage {
   currentLocation="Current Location";from;to;fromLat;fromLng;toLat;toLng;dist;price1;price2
   constructor(public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
   
+  
   }
 
-
+  ngAfterViewInit(){
+    this.loadMap()
+  }
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
 
@@ -56,7 +59,19 @@ export class HomePage {
         let data=res['data']
         this.from=data['formatted_address']
         this.fromLat=data['geometry']['location']['lat']
-        this.fromLng=data['geometry']['location']['lng']
+        this.fromLng=data['geometry']['location']['lng']  
+        this.location = new LatLng(this.fromLat, this.fromLng);
+        console.log(this.lat,this.lng);
+      this.showCurrentLocation()
+    
+        let obj={
+          lat:this.fromLat.toString(),
+          lng:this.fromLng.toString()
+        }
+        this.cabsLocaProv.getCabsData(obj).then((res:any)=>{  
+          this.parseGetCabs(res)
+          this.loadMap();   
+        })
         console.log(this.from)
         console.log(this.fromLat,this.fromLng)
    });
@@ -74,7 +89,7 @@ export class HomePage {
         this.to=data['formatted_address']
         this.toLat=data['geometry']['location']['lat']
         this.toLng=data['geometry']['location']['lng']
-       this.dist= this.cabsLocaProv.calculateDistance(this.fromLat,this.fromLng,this.toLat,this.toLng)
+    
       this.dist=this.dist.toFixed(2)
        this.price1=(this.dist*7).toFixed(0)
        this.price2=this.price1-10
@@ -109,12 +124,21 @@ getCabsData(){
     this.fromLng=this.lng
     this.location = new LatLng(this.lat, this.lng);
     console.log(this.lat,this.lng);
-  // this.showCurrentLocation()
+  this.showCurrentLocation()
 
-   this.getCabs.getCabsData().then(res=>{
+  let obj={
+    lat:this.lat,
+    lng:this.lng 
+  }
+   this.getCabs.getCabsData(obj).then((res:any)=>{
      console.log(res)
      this.spinnerShow=false
-     this.parseGetCabs(res)
+     if(res.success){
+     
+      this.parseGetCabs(res)
+     }else{
+       alert("something went wrong")
+     }
     
    })
    }).catch((error) => {
@@ -162,7 +186,7 @@ addInfoWindow(marker, content){
  
 }
   loadMap() {
-   
+     console.log("in load map")
     let mapOptions = {
       center: this.location,
       zoom: 15,
@@ -248,18 +272,17 @@ addInfoWindow(marker, content){
   
 
     parseGetCabs(res){
-      this.cabsList=res
+      this.cabsList=res.Data
     for(let i=0;i<this.cabsList.length;i++){
-       this.cabsList[i]['dist']= ((this.cabsLocaProv.calculateDistance(this.lat,this.lng,this.cabsList[i].lat,this.cabsList[i].lng)));
-           this.cabsList[i]['dist']=this.cabsList[i]['dist'].toFixed(2);
-           console.log(this.cabsList[i].lat);
+     
                 let obj={
-                  lat:this.cabsList[i].lat,
-                  lng:this.cabsList[i].lng
+                  lat:parseFloat(this.cabsList[i].lat),
+                  lng:parseFloat(this.cabsList[i].lng)  
                 };
+                console.log("retrieved lat lng",obj)
             this.locations[i]=obj;
     }
-    
+    this.loadMap()
 
     }
     

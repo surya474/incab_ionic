@@ -10,7 +10,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = 'PhoneloginPage';
+  rootPage:any 
 
   
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
@@ -19,7 +19,17 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
+      this.checkUser()
     });
+  }
+  checkUser(){
+  let state=  localStorage.getItem("isloggedIn")
+  if(state=="true"){
+ this.rootPage="HomePage"
+  }
+  else{
+    this.rootPage="PhoneloginPage"  
+  }
   }
 }
 

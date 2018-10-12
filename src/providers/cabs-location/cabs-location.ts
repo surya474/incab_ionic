@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import {Globalvalues} from '../../globalValues'
 /*
   Generated class for the CabsLocationProvider provider.
 
@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class CabsLocationProvider {
 
-
+ apisList=Globalvalues.apisList
   
   constructor(public http: HttpClient) {
     console.log('Hello CabsLocationProvider Provider');
@@ -19,10 +19,10 @@ export class CabsLocationProvider {
 
 
 
-  getCabsData(){
+  getCabsData(data){
 
     return new Promise(resolve=>{
-      this.http.get('assets/jsons/nearcabs.json').subscribe(res=>{
+      this.http.post(this.apisList.getNearByCabs,data).subscribe(res=>{
         console.log(res)
     resolve(res)
       })

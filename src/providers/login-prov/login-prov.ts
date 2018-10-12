@@ -9,6 +9,7 @@ import {Globalvalues} from '../../globalValues'
 */
 @Injectable()
 export class LoginProvProvider {
+  apiList=Globalvalues.apisList
    headers = new Headers({ 'Content-Type': 'application/json' }); // ... Set content type to JSON
   
   constructor(public http: HttpClient) {
@@ -16,11 +17,20 @@ export class LoginProvProvider {
   }
 
 registerUser(data){
-return new Promise(resolve=>{   
-  this.http.post(Globalvalues.apisList.register,this.headers).subscribe(res=>{
+return new Promise(resolve=>{         
+  this.http.post(this.apiList.register,data).subscribe(res=>{
   resolve(res)
   })
 })
 }
 
+checkUser(data){
+  console.log("in provider",data)
+  return new Promise(resolve=>{
+    this.http.post(this.apiList.checkUser,data).subscribe(res=>{
+      console.log("in res ",res)
+      resolve(res)
+      })
+  })
+}
 }

@@ -8,13 +8,13 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+@IonicPage()   
 @Component({
   selector: 'page-geocomplete',
   templateUrl: 'geocomplete.html',
 })
 export class GeocompletePage {
-
+  
   constructor(public viewCtrl: ViewController,public navCtrl: NavController, public navParams: NavParams) {
   }
 

@@ -6,10 +6,11 @@ export namespace Globalvalues{
         projectId: "mycab-72668",
         storageBucket: "mycab-72668.appspot.com",
         messagingSenderId: "171748089740"
-      };
-export const  restApi="localhost:3000/incab/"  
+      };  
+ export const  restApi="http://localhost:3000/incab/"  
 export const apisList={
     register:restApi+'user/auth/RegisterUser',
-    checkUser:restApi+'user/auth/checkUser'    
+    checkUser:restApi+'user/auth/checkUser',
+    getNearByCabs:restApi+'user/getDrivers/getNearbyCabs'    
 }  
 }
