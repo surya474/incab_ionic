@@ -90,9 +90,9 @@ export class HomePage {
         this.toLat=data['geometry']['location']['lat']
         this.toLng=data['geometry']['location']['lng']
     
-      this.dist=this.dist.toFixed(2)
-       this.price1=(this.dist*7).toFixed(0)
-       this.price2=this.price1-10
+      // this.dist=this.dist.toFixed(2)
+      //  this.price1=(this.dist*7).toFixed(0)
+      //  this.price2=this.price1-10
        this.showdist=true
        console.log(this.dist)
       }
