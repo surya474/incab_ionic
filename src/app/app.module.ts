@@ -24,6 +24,7 @@ import { Firebase } from '@ionic-native/firebase';
 import { ApiProvider } from '../providers/api/api';
 import { CountrieslistProvider } from '../providers/countrieslist/countrieslist';
 import { LoginProvProvider } from '../providers/login-prov/login-prov';
+import { DistpriceprovProvider } from '../providers/distpriceprov/distpriceprov';
 
 firebase.initializeApp(Globalvalues.firebaseConfig);
 @NgModule({
@@ -58,6 +59,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
     ApiProvider,
     CountrieslistProvider,
     LoginProvProvider,
+    DistpriceprovProvider,
   ]
 })
 export class AppModule {}

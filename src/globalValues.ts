@@ -11,6 +11,8 @@ export namespace Globalvalues{
 export const apisList={
     register:rootApi+'user/auth/RegisterUser',
     checkUser:rootApi+'user/auth/checkUser',
-    getNearByCabs:rootApi+'user/getDrivers/getNearbyCabs'    
+    getNearByCabs:rootApi+'user/getDrivers/getNearbyCabs',
+    getRidePrice:rootApi+'user/reqRideDetails/getPrice',
+    getDistance:rootApi+'user/reqRideDetails/getDistance'     
 }  
 }

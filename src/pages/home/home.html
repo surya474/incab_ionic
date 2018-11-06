@@ -85,7 +85,7 @@
             <ion-col>
               <button ion-button icon-start>
                 <ion-icon ios="logo-usd" md="logo-usd"></ion-icon>
-                Price ({{price1}}-{{price2}} $)
+                Price ({{price2}}-{{price1}} $)     
               </button>
             </ion-col>
                      
@@ -123,5 +123,21 @@
 </ion-content>
 
 <ion-footer>
+     
+        <ion-row  *ngIf="showdist">
+                <ion-col col-7>
+             <button ion-button icon-start>
+                 <ion-icon ios="ios-pin" md="md-pin"></ion-icon>
+                 Distance - {{dist}} km
+               </button>
+             </ion-col>
+             <ion-col col-4>   
+               <button ion-button icon-start>
+                 <ion-icon ios="logo-usd" md="logo-usd"></ion-icon>
+                 Price ({{price2}}-{{price1}} $)     
+               </button>
+             </ion-col>
+                      
+            </ion-row>
     <button ion-button  full  [hidden]=" Cabs != 'LocationView'" color="dark" (click)=bookride(cabsList[0])>Ride Now</button>
 </ion-footer>

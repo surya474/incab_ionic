@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams, MenuController, ModalController } 
 import { GoogleMap,GoogleMaps,LatLng,GoogleMapsEvent, GoogleMapOptions, Marker } from '@ionic-native/google-maps';
 import { Geolocation,GeolocationOptions, Geoposition } from '@ionic-native/geolocation';
 import { CabsLocationProvider } from '../../providers/cabs-location/cabs-location';
+import { DistpriceprovProvider } from '../../providers/distpriceprov/distpriceprov';
 /**
  * Generated class for the HomePage page.
  *
@@ -34,7 +35,7 @@ export class HomePage {
   showdist=false
   spinnerShow=true
   currentLocation="Current Location";from;to;fromLat;fromLng;toLat;toLng;dist;price1;price2
-  constructor(public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public distpriceprov:DistpriceprovProvider,public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
   
   
   }
@@ -50,7 +51,7 @@ export class HomePage {
 
 
 
-  geoModalFrom(){
+  async geoModalFrom(){
     let profileModal = this.modalCtrl.create('GeocompletePage', { userId: 8675309 });
    profileModal.onDidDismiss(res => {
     
@@ -80,7 +81,7 @@ export class HomePage {
 
 
   
-  geoModalTo(){
+  async geoModalTo(){
     let profileModal = this.modalCtrl.create('GeocompletePage', {  });
     profileModal.onDidDismiss(res => {
       console.log(res);
@@ -89,20 +90,24 @@ export class HomePage {
         this.to=data['formatted_address']
         this.toLat=data['geometry']['location']['lat']
         this.toLng=data['geometry']['location']['lng']
+  this.getDistance().then(distance=>{
+    console.log("in get distnce tomodal",distance)
+
+    this.getPrice().then(price=>{
+   this.showdist=true
+       console.log(this.dist)   
+    })      
+  })   
+  
     
-      // this.dist=this.dist.toFixed(2)
-      //  this.price1=(this.dist*7).toFixed(0)
-      //  this.price2=this.price1-10
-       this.showdist=true
-       console.log(this.dist)
       }
       else{
 
       }
      
       
-    });
-
+    });   
+   
 
     profileModal.present();
   }
@@ -111,12 +116,55 @@ bookride(data){
   this.navCtrl.push('BookridePage',{"driverdata":data})
 }
 
+getPrice(){
+return new Promise(resolve=>{
+  console.log("in get price")
+  let data={
+    lat:this.fromLat.toString(),   
+    lng:this.fromLng.toString(),
+  }
+    this.distpriceprov.getRidePrice(data).then((resp:any)=>{
+      console.log("in price resp",resp)   
+        if(resp.success){
+     if(resp.Data.length){       
+       console.log(resp.Data)
+       let price=resp.Data[0].price               
+       this.price1=(price * this.dist).toFixed(0)
+       this.price2=(this.price1- (3*this.dist)).toFixed(0)    
+       console.log(this.price1,this.price2)
+       resolve(price)               
+     }      
+        }             
+    })
 
+})
+
+}
+
+ async  getDistance(){
+   return new Promise(resolve=>{
+    let data={
+      fromlat:this.fromLat.toString(),
+      fromlng:this.fromLng.toString(),
+      tolat:this.toLat.toString(), 
+      tolng:this.toLng.toString()     
+    }
+      this.distpriceprov.getDistance(data).then((resp:any)=>{
+          if(resp.success){
+        this.showdist=true
+        this.dist=resp.Data.distanceValue   
+          resolve(this.dist)
+          }
+      })
+   })
+  
+}
 
 
 getCabsData(){
 
   this.geolocation.getCurrentPosition().then((resp) => {
+    console.log(resp)
     this.from="Current Location "
     this.lat= resp.coords.latitude;
     this.lng=resp.coords.longitude;
