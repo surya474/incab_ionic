@@ -1,0 +1,12 @@
+page-show-ride-req-modal {
+    ion-modal .page-show-ride-req-modal ion-backdrop {
+        visibility: visible !important;
+        z-index:0;
+    }
+    ion-modal.page-show-ride-req-modal.modal-wrapper{
+        top: 20%;
+        width:60%;
+        height:300px;
+        position:absolute;
+    }
+}

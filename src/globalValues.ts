@@ -13,6 +13,7 @@ export const apisList={
     checkUser:rootApi+'user/auth/checkUser',
     getNearByCabs:rootApi+'user/getDrivers/getNearbyCabs',
     getRidePrice:rootApi+'user/reqRideDetails/getPrice',
-    getDistance:rootApi+'user/reqRideDetails/getDistance'     
+    getDistance:rootApi+'user/reqRideDetails/getDistance',
+    confirmRide:rootApi+'user/bookride/confirmRide'     
 }  
 }

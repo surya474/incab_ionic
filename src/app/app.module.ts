@@ -25,12 +25,16 @@ import { ApiProvider } from '../providers/api/api';
 import { CountrieslistProvider } from '../providers/countrieslist/countrieslist';
 import { LoginProvProvider } from '../providers/login-prov/login-prov';
 import { DistpriceprovProvider } from '../providers/distpriceprov/distpriceprov';
+import { ConfirmrideProvider } from '../providers/confirmride/confirmride';
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 
+const socketconfig: SocketIoConfig = { url: 'localhost:8810', options: {} };
+//url: 'http://ec2-18-217-223-215.us-east-2.compute.amazonaws.com:8810
+//'http://incabnode.appspot.com:8810   
 firebase.initializeApp(Globalvalues.firebaseConfig);
 @NgModule({
-  declarations: [
-    MyApp
-    
+  declarations: [   
+    MyApp  
   ],
 
   imports: [
@@ -41,6 +45,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
     AngularFireDatabaseModule,
     IonicModule.forRoot(MyApp),
     Ng4GeoautocompleteModule.forRoot(),
+    SocketIoModule.forRoot(socketconfig)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -60,6 +65,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
     CountrieslistProvider,
     LoginProvProvider,
     DistpriceprovProvider,
+    ConfirmrideProvider,
   ]
 })
 export class AppModule {}

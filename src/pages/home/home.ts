@@ -5,6 +5,7 @@ import { GoogleMap,GoogleMaps,LatLng,GoogleMapsEvent, GoogleMapOptions, Marker }
 import { Geolocation,GeolocationOptions, Geoposition } from '@ionic-native/geolocation';
 import { CabsLocationProvider } from '../../providers/cabs-location/cabs-location';
 import { DistpriceprovProvider } from '../../providers/distpriceprov/distpriceprov';
+import { ConfirmrideProvider } from '../../providers/confirmride/confirmride';
 /**
  * Generated class for the HomePage page.
  *
@@ -35,7 +36,7 @@ export class HomePage {
   showdist=false
   spinnerShow=true
   currentLocation="Current Location";from;to;fromLat;fromLng;toLat;toLng;dist;price1;price2
-  constructor(public distpriceprov:DistpriceprovProvider,public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public confmrideprov:ConfirmrideProvider,public distpriceprov:DistpriceprovProvider,public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
   
   
   }
@@ -96,8 +97,8 @@ export class HomePage {
     this.getPrice().then(price=>{
    this.showdist=true
        console.log(this.dist)   
-    })      
-  })   
+    })            
+  })      
   
     
       }
@@ -111,9 +112,20 @@ export class HomePage {
 
     profileModal.present();
   }
-bookride(data){
-  console.log(data)
-  this.navCtrl.push('BookridePage',{"driverdata":data})
+bookride(){
+  let data={
+  "Mobile_Number":"919866963616",
+	"lat":this.fromLat,
+	"lng":this.fromLng,
+	"from":this.from,
+  "to":this.to,
+  "userName":"suryateja"  
+  }
+this.confmrideprov.confirmRide(data).then((res:any)=>{
+  console.log("in confirm booking response",res)
+})     
+       
+  // this.navCtrl.push('BookridePage',{"driverdata":data})
 }
 
 getPrice(){
