@@ -13,10 +13,9 @@ export class ConfirmrideProvider {
   constructor(public http: HttpClient) {
     console.log('Hello ConfirmrideProvider Provider');
   }
-
-
   confirmRide(data){
     return new Promise(resolve=>{
+      console.log("confirm ride data",data)
       this.http.post(Globalvalues.apisList.confirmRide,data).subscribe((res):any=>{
         resolve(res)     
    })

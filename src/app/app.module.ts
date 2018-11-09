@@ -27,6 +27,7 @@ import { LoginProvProvider } from '../providers/login-prov/login-prov';
 import { DistpriceprovProvider } from '../providers/distpriceprov/distpriceprov';
 import { ConfirmrideProvider } from '../providers/confirmride/confirmride';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+import { AlertLoaderProvider } from '../providers/alert-loader/alert-loader';
 
 const socketconfig: SocketIoConfig = { url: 'localhost:8810', options: {} };
 //url: 'http://ec2-18-217-223-215.us-east-2.compute.amazonaws.com:8810
@@ -50,7 +51,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp
-   
+      
   ],
   providers: [
     StatusBar,
@@ -58,7 +59,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     GoogleMaps,
     Geolocation,
-    Firebase,
+    Firebase,   
     GeolocationProvider,
     CabsLocationProvider,
     ApiProvider,
@@ -66,6 +67,7 @@ firebase.initializeApp(Globalvalues.firebaseConfig);
     LoginProvProvider,
     DistpriceprovProvider,
     ConfirmrideProvider,
-  ]
+    AlertLoaderProvider,
+  ]      
 })
 export class AppModule {}

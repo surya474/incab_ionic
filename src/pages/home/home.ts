@@ -1,11 +1,14 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, ModalController, LoadingController } from 'ionic-angular';
 
-import { GoogleMap,GoogleMaps,LatLng,GoogleMapsEvent, GoogleMapOptions, Marker } from '@ionic-native/google-maps';
-import { Geolocation,GeolocationOptions, Geoposition } from '@ionic-native/geolocation';
+import { GoogleMap, GoogleMaps, LatLng, GoogleMapsEvent, GoogleMapOptions, Marker } from '@ionic-native/google-maps';
+import { Geolocation, GeolocationOptions, Geoposition } from '@ionic-native/geolocation';
 import { CabsLocationProvider } from '../../providers/cabs-location/cabs-location';
 import { DistpriceprovProvider } from '../../providers/distpriceprov/distpriceprov';
 import { ConfirmrideProvider } from '../../providers/confirmride/confirmride';
+import { Socket } from 'ng-socket-io';
+import { AlertLoaderProvider } from '../../providers/alert-loader/alert-loader';
+
 /**
  * Generated class for the HomePage page.
  *
@@ -27,247 +30,279 @@ export class HomePage {
   cabs
   @ViewChild('map') mapElement: ElementRef;
   private map;
-  private map2:GoogleMap;
-  locations= [];
-  location:LatLng
-  Cabs='ListView'
-  cabsList=[]
+  private map2: GoogleMap;
+  locations = [];
+  location: LatLng
+  Cabs = 'ListView'
+  cabsList = []
   markers = [];
-  showdist=false
-  spinnerShow=true
-  currentLocation="Current Location";from;to;fromLat;fromLng;toLat;toLng;dist;price1;price2
-  constructor(public confmrideprov:ConfirmrideProvider,public distpriceprov:DistpriceprovProvider,public modalCtrl: ModalController,public cabsLocaProv:CabsLocationProvider,public menuCtrl: MenuController,private geolocation: Geolocation,public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps,public navCtrl: NavController, public navParams: NavParams) {
-  
-  
-  }
+  showdist = false
+  spinnerShow = true
+  Mobile_Number="919866963616"
+  uid
+  currentLocation = "Current Location"; from; to; fromLat; fromLng; toLat; toLng; dist; price1; price2
+  loading:any;
 
-  ngAfterViewInit(){
-    this.loadMap()
+
+  constructor(public loader:LoadingController,public alrtloaderprov:AlertLoaderProvider,private socket: Socket, public confmrideprov: ConfirmrideProvider, public distpriceprov: DistpriceprovProvider, public modalCtrl: ModalController, public cabsLocaProv: CabsLocationProvider, public menuCtrl: MenuController, private geolocation: Geolocation, public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps, public navCtrl: NavController, public navParams: NavParams) {
+//this.Mobile_Number=localStorage.getItem('Mobile_Number')
+ this.uid=localStorage.getItem('uid')  
+ console.log(this.Mobile_Number,this.uid)   
+  }
+               
+  ngAfterViewInit() {    
+    this.loadMap()   
   }
   ionViewDidLoad() {
     console.log('ionViewDidLoad HomePage');
 
     this.getCabsData()
+    
+    this.socket.connect()  
+    this.socket.on('tripReqStatus', (data) => {    
+                console.log("trp req status from server",data.Mobile_Number,this.Mobile_Number)   
+               
+              
+                if(this.Mobile_Number==data.Mobile_Number){  
+                  this.navCtrl.setRoot('BookridePage',{data:data},{animate: true, direction: 'forward'})            
+    
+                this.loading.dismiss()
+                                  
+            }                     
+    });           
+          
+
+
+   
   }
 
 
 
-  async geoModalFrom(){
+  async geoModalFrom() {
     let profileModal = this.modalCtrl.create('GeocompletePage', { userId: 8675309 });
-   profileModal.onDidDismiss(res => {
-    
-     console.log(Object.keys(res))
+    profileModal.onDidDismiss(res => {
+
+      console.log(Object.keys(res))
       console.log(res['data'])
-        let data=res['data']
-        this.from=data['formatted_address']
-        this.fromLat=data['geometry']['location']['lat']
-        this.fromLng=data['geometry']['location']['lng']  
-        this.location = new LatLng(this.fromLat, this.fromLng);
-        console.log(this.lat,this.lng);
+      let data = res['data']
+      this.from = data['formatted_address']
+      this.fromLat = data['geometry']['location']['lat']
+      this.fromLng = data['geometry']['location']['lng']
+      this.location = new LatLng(this.fromLat, this.fromLng);
+      console.log(this.lat, this.lng);
       this.showCurrentLocation()
-    
-        let obj={
-          lat:this.fromLat.toString(),
-          lng:this.fromLng.toString()
-        }
-        this.cabsLocaProv.getCabsData(obj).then((res:any)=>{  
-          this.parseGetCabs(res)
-          this.loadMap();   
-        })
-        console.log(this.from)
-        console.log(this.fromLat,this.fromLng)
-   });
-   profileModal.present();
+
+      let obj = {
+        lat: this.fromLat.toString(),
+        lng: this.fromLng.toString()
+      }
+      this.cabsLocaProv.getCabsData(obj).then((res: any) => {
+        this.parseGetCabs(res)
+        this.loadMap();
+      })
+      console.log(this.from)
+      console.log(this.fromLat, this.fromLng)
+    });
+    profileModal.present();
   }
+    
 
 
-  
-  async geoModalTo(){
-    let profileModal = this.modalCtrl.create('GeocompletePage', {  });
+  async geoModalTo() {
+    let profileModal = this.modalCtrl.create('GeocompletePage', {});
     profileModal.onDidDismiss(res => {
       console.log(res);
-      if(res['response']){
-        let data=res['data']
-        this.to=data['formatted_address']
-        this.toLat=data['geometry']['location']['lat']
-        this.toLng=data['geometry']['location']['lng']
-  this.getDistance().then(distance=>{
-    console.log("in get distnce tomodal",distance)
+      if (res['response']) {
+        let data = res['data']
+        this.to = data['formatted_address']
+        this.toLat = data['geometry']['location']['lat']
+        this.toLng = data['geometry']['location']['lng']
+        this.getDistance().then(distance => {
+          console.log("in get distnce tomodal", distance)
 
-    this.getPrice().then(price=>{
-   this.showdist=true
-       console.log(this.dist)   
-    })            
-  })      
-  
-    
-      }
-      else{
+          this.getPrice().then(price => {
+            this.showdist = true
+            console.log(this.dist)
+          })
+        })
+
 
       }
-     
-      
+      else {
+
+      }
+
+
     });   
-   
+      
 
     profileModal.present();
   }
-bookride(){
-  let data={
-  "Mobile_Number":"919866963616",
-	"lat":this.fromLat,
-	"lng":this.fromLng,
-	"from":this.from,
-  "to":this.to,
-  "userName":"suryateja"  
-  }
-this.confmrideprov.confirmRide(data).then((res:any)=>{
-  console.log("in confirm booking response",res)
-})     
-       
-  // this.navCtrl.push('BookridePage',{"driverdata":data})
-}
+  bookride() {
+    let data = {       
+      "Mobile_Number": "919866963616",
+      "lat": this.fromLat,
+      "lng": this.fromLng,
+      "from": this.from,
+      "to": this.to,
+      "userId":this.uid,
+      "userName": "suryateja"
+    }
 
-getPrice(){
-return new Promise(resolve=>{
-  console.log("in get price")
-  let data={
-    lat:this.fromLat.toString(),   
-    lng:this.fromLng.toString(),
-  }
-    this.distpriceprov.getRidePrice(data).then((resp:any)=>{
-      console.log("in price resp",resp)   
-        if(resp.success){
-     if(resp.Data.length){       
-       console.log(resp.Data)
-       let price=resp.Data[0].price               
-       this.price1=(price * this.dist).toFixed(0)
-       this.price2=(this.price1- (3*this.dist)).toFixed(0)    
-       console.log(this.price1,this.price2)
-       resolve(price)               
-     }      
-        }             
+  //  this.alrtloaderprov.showLoader("Connecting to Driver")
+  this.loading = this.loader.create({
+    content: "Connecting to Driver"     
+  });
+
+  this.loading.present();
+    this.confmrideprov.confirmRide(data).then((res: any) => {
+      console.log("in confirm booking response", res)
+       
     })
 
-})
+    // this.navCtrl.push('BookridePage',{"driverdata":data})
+  }
 
-}
-
- async  getDistance(){
-   return new Promise(resolve=>{
-    let data={
-      fromlat:this.fromLat.toString(),
-      fromlng:this.fromLng.toString(),
-      tolat:this.toLat.toString(), 
-      tolng:this.toLng.toString()     
-    }
-      this.distpriceprov.getDistance(data).then((resp:any)=>{
-          if(resp.success){
-        this.showdist=true
-        this.dist=resp.Data.distanceValue   
-          resolve(this.dist)
+  getPrice() {
+    return new Promise(resolve => {
+      console.log("in get price")
+      let data = {
+        lat: this.fromLat.toString(),
+        lng: this.fromLng.toString(),
+      }
+      this.distpriceprov.getRidePrice(data).then((resp: any) => {
+        console.log("in price resp", resp)
+        if (resp.success) {
+          if (resp.Data.length) {
+            console.log(resp.Data)
+            let price = resp.Data[0].price
+            this.price1 = (price * this.dist).toFixed(0)
+            this.price2 = (this.price1 - (3 * this.dist)).toFixed(0)
+            console.log(this.price1, this.price2)
+            resolve(price)
           }
+        }
       })
-   })
-  
-}
 
+    })
 
-getCabsData(){
-
-  this.geolocation.getCurrentPosition().then((resp) => {
-    console.log(resp)
-    this.from="Current Location "
-    this.lat= resp.coords.latitude;
-    this.lng=resp.coords.longitude;
-    this.fromLat=this.lat
-    this.fromLng=this.lng
-    this.location = new LatLng(this.lat, this.lng);
-    console.log(this.lat,this.lng);
-  this.showCurrentLocation()
-
-  let obj={
-    lat:this.lat,
-    lng:this.lng 
-  }
-   this.getCabs.getCabsData(obj).then((res:any)=>{
-     console.log(res)
-     this.spinnerShow=false
-     if(res.success){
-     
-      this.parseGetCabs(res)
-     }else{
-       alert("something went wrong")
-     }
-    
-   })
-   }).catch((error) => {
-     console.log('Error getting location', error);
-   });
-
-}
-
-
-
-getLocationView() {
-
-  this.loadMap();
-
-}
-
-showCurrentLocation(){
-  let mapOptions = {
-    center: this.location,
-    zoom: 15,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
   }
 
-  this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+  async  getDistance() {
+    return new Promise(resolve => {
+      let data = {
+        fromlat: this.fromLat.toString(),
+        fromlng: this.fromLng.toString(),
+        tolat: this.toLat.toString(),
+        tolng: this.toLng.toString()
+      }
+      this.distpriceprov.getDistance(data).then((resp: any) => {
+        if (resp.success) {
+          this.showdist = true
+          this.dist = resp.Data.distanceValue
+          resolve(this.dist)
+        }
+      })
+    })
 
-  let marker = new google.maps.Marker({
-    map: this.map,
-    animation: google.maps.Animation.DROP,
-    position: this.map.getCenter()
-  });
- 
-  let content = "<h4>Information!</h4>";         
- 
-  this.addInfoWindow(marker, content);
-}
-addInfoWindow(marker, content){
- 
-  let infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
- 
-  google.maps.event.addListener(marker, 'click', () => {
-    infoWindow.open(this.map, marker);
-  });
- 
-}
+  }
+
+
+  getCabsData() {
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log(resp)
+      this.from = "Current Location "
+      this.lat = resp.coords.latitude;
+      this.lng = resp.coords.longitude;
+      this.fromLat = this.lat
+      this.fromLng = this.lng
+      this.location = new LatLng(this.lat, this.lng);
+      console.log(this.lat, this.lng);
+      this.showCurrentLocation()
+
+      let obj = {
+        lat: this.lat,
+        lng: this.lng
+      }
+      this.getCabs.getCabsData(obj).then((res: any) => {
+        console.log(res)
+        this.spinnerShow = false
+        if (res.success) {
+
+          this.parseGetCabs(res)
+        } else {
+          alert("something went wrong")
+        }
+
+      })
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+
+  }
+
+
+
+  getLocationView() {
+
+    this.loadMap();
+
+  }
+
+  showCurrentLocation() {
+    let mapOptions = {
+      center: this.location,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+
+    this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+    let marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: this.map.getCenter()
+    });
+
+    let content = "<h4>Information!</h4>";
+
+    this.addInfoWindow(marker, content);
+  }
+  addInfoWindow(marker, content) {
+
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
+
+  }
   loadMap() {
-     console.log("in load map")
+    console.log("in load map")
     let mapOptions = {
       center: this.location,
       zoom: 15,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      };
+    };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
 
     let marker2 = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.BOUNCE,
       position: this.map.getCenter(),
-      title:'You are here'
+      title: 'You are here'
     });
-   
-    let content = "<h4>You are here!</h4>";         
-   
+
+    let content = "<h4>You are here!</h4>";
+
     this.addInfoWindow(marker2, content);
     var infowindow = new google.maps.InfoWindow();
-     let i;
+    let i;
     for (i = 0; i < this.locations.length; i++) {
-     this.markers[i] = new google.maps.Marker({
+      this.markers[i] = new google.maps.Marker({
         position: new google.maps.LatLng(this.locations[i].lat, this.locations[i].lng),
         map: this.map,
         animation: google.maps.Animation.DROP,
@@ -286,7 +321,7 @@ addInfoWindow(marker, content){
   clearMarkers() {
     this.setMapOnAll(null);
   }
-  
+
   deleteMarkers() {
     this.clearMarkers();
     this.markers = [];
@@ -297,15 +332,15 @@ addInfoWindow(marker, content){
     }
   }
   addMarker() {
-    let mapOptions= {
+    let mapOptions = {
       camera: {
-         target: {
-           lat: this.lat,
-           lng: this.lng
-         },
-         zoom: 18,
-         tilt: 30
-       }
+        target: {
+          lat: this.lat,
+          lng: this.lng
+        },
+        zoom: 18,
+        tilt: 30
+      }
     };
 
 
@@ -325,27 +360,27 @@ addInfoWindow(marker, content){
     //   alert('clicked');
     // });
   }
-  
 
-  
 
-  
 
-    parseGetCabs(res){
-      this.cabsList=res.Data
-    for(let i=0;i<this.cabsList.length;i++){
-     
-                let obj={
-                  lat:parseFloat(this.cabsList[i].lat),
-                  lng:parseFloat(this.cabsList[i].lng)  
-                };
-                console.log("retrieved lat lng",obj)
-            this.locations[i]=obj;
+
+
+
+  parseGetCabs(res) {
+    this.cabsList = res.Data
+    for (let i = 0; i < this.cabsList.length; i++) {
+
+      let obj = {
+        lat: parseFloat(this.cabsList[i].lat),
+        lng: parseFloat(this.cabsList[i].lng)
+      };
+      console.log("retrieved lat lng", obj)
+      this.locations[i] = obj;
     }
     this.loadMap()
 
-    }
-    
+  }
+
 
 
 

@@ -16,28 +16,31 @@
 <ion-content >
   <ion-item-divider color="dark">
   Driver Details
-  </ion-item-divider>
-  <ion-card text-center>
+  </ion-item-divider>   
+  <diV *ngIf="!showDriver">  
+  <ion-spinner name="bubbles"> Getting Driver Details</ion-spinner>
+</diV>
+  <ion-card text-center *ngIf="showDriver">
    <div style="text-align: -webkit-center">
     <img src="{{driverdata.driver_pic}}" style="border-radius: 50%;width:50%">   
   </div>
 
   <button ion-item>
     <ion-icon ios="ios-person" md="md-person" item-start></ion-icon>
-    {{driverdata.driver_name}}
+    {{driverdata.Firstname}}{{driverdata.LastName}}
   </button> 
   <button ion-item>
     <ion-icon ios="ios-copy" md="md-copy" item-start></ion-icon>
-    {{driverdata.driver_lic}}
+    {{driverdata.LicenseNumber}}  
   </button> 
   <button ion-item>
     <ion-icon ios="ios-call" md="md-call" item-start></ion-icon>
-    {{driverdata.driver_mob}}
+    {{driverdata.Mobile_Number}}
   </button> 
   
-</ion-card>
+</ion-card>   
 
-<ion-item-divider color="dark">
+<!-- <ion-item-divider color="dark">
   Payment
   </ion-item-divider>
 <ion-list radio-group [(ngModel)]="paymentType">
@@ -59,7 +62,7 @@
     </ion-icon> {{cardnumber}} </ion-label>
     <ion-radio color="light" value="card" (click)="gotoCard()" ></ion-radio>
   </ion-item>
-</ion-list>
+</ion-list> -->
 <button ion-button (click)=submit() full color="dark">Make Payment</button>
 
 </ion-content>

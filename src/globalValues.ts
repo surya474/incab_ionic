@@ -16,4 +16,8 @@ export const apisList={
     getDistance:rootApi+'user/reqRideDetails/getDistance',
     confirmRide:rootApi+'user/bookride/confirmRide'     
 }  
+export const driverApis={
+    getDriverDetails:rootApi+'driver/auth/checkDriver'
 }
+}
+

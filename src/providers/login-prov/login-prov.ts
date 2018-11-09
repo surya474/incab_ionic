@@ -33,4 +33,14 @@ checkUser(data){
       })
   })
 }
+
+getDriverData(data){
+  console.log("in provider",data)
+  return new Promise(resolve=>{
+    this.http.post(this.apiList.checkUser,data).subscribe(res=>{
+      console.log("in res ",res)
+      resolve(res)
+      })
+  })
+}
 }
