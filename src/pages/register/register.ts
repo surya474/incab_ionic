@@ -10,6 +10,7 @@ import { LoginProvProvider } from '../../providers/login-prov/login-prov';
  * Ionic pages and navigation.
  */
 
+ 
 @IonicPage()
 @Component({
   selector: 'page-register',

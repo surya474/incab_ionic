@@ -1,13 +1,15 @@
-<ion-content padding>
+<ion-content class="home-background">
   <div id="recaptcha-container"></div>
-
-  <ion-item>
-    <ion-label stacked>Phone Number</ion-label>
-    <ion-input type="number" [(ngModel)]="phoneNumber"></ion-input>
+  <div style=" margin-top: 58%;text-align:center">
+    <ion-list style="width: 85%;margin-left:8%">
+     <ion-item style="margin-bottom: 4%; border-radius: 0px;">
+       <ion-label>
+         <ion-icon color="dark" style="font-size:20px" ios="ios-phone-portrait" md="md-phone-portrait"></ion-icon>
+         </ion-label>
+    <ion-input type="number" placeholder="PhoneNumber" [(ngModel)]="phoneNumber"></ion-input>
   </ion-item>
-
-  <button ion-button id="sign-in-button" (click)="signIn2(phoneNumber)">
-    Sign In
-  </button>
+  <button ion-button id="sign-in-button"    (click)="signIn2(phoneNumber)"style="border-radius: 0px;margin-top: 3%;width: 100%;height: 50px !important;margin-left: -1px; background-color: #FD6A02;">Sign In</button>
+</ion-list>
+</div>
 
 </ion-content>

@@ -7,7 +7,8 @@ export namespace Globalvalues{
         storageBucket: "mycab-72668.appspot.com",
         messagingSenderId: "171748089740"
       };  
- export const  rootApi="http://localhost:3000/incab/"  
+      
+ export const  rootApi="http://172.17.11.82:3000/incab/"  
 export const apisList={
     register:rootApi+'user/auth/RegisterUser',
     checkUser:rootApi+'user/auth/checkUser',

@@ -15,12 +15,14 @@ import { AlertLoaderProvider } from '../../providers/alert-loader/alert-loader';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
+
 declare var google;
 @IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
 })
+
 export class HomePage {
   google: any;
   options: GeolocationOptions;
@@ -38,10 +40,11 @@ export class HomePage {
   markers = [];
   showdist = false
   spinnerShow = true
-  Mobile_Number="919866963616"
+  Mobile_Number="919912458677"
   uid
   currentLocation = "Current Location"; from; to; fromLat; fromLng; toLat; toLng; dist; price1; price2
   loading:any;
+
 
 
   constructor(public loader:LoadingController,public alrtloaderprov:AlertLoaderProvider,private socket: Socket, public confmrideprov: ConfirmrideProvider, public distpriceprov: DistpriceprovProvider, public modalCtrl: ModalController, public cabsLocaProv: CabsLocationProvider, public menuCtrl: MenuController, private geolocation: Geolocation, public getCabs: CabsLocationProvider, private googleMaps: GoogleMaps, public navCtrl: NavController, public navParams: NavParams) {
